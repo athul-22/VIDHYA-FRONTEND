@@ -18,7 +18,7 @@ import { set } from "lodash";
 
 interface Message {
   text: string;
-  sender: 'ai' | 'user';
+  sender: 'ai' | 'user' | 'typing';
 }
 
 const paperStyle = {
@@ -30,7 +30,6 @@ const paperStyle = {
 const SamplePage: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     { text: 'Hello! How can I assist you today?', sender: 'ai' },
-    // { text: 'Can you tell me more about your services?', sender: 'user' },
   ]);
 
   const [input, setInput] = useState<string>('');
@@ -47,29 +46,52 @@ const SamplePage: React.FC = () => {
   const [isRecording, setIsRecording] = useState(false);
 
   // CHAT GPT API
-
+  // const chatApi = async (text: string) => {
+  //   setMessages([...messages, { text: 'Typing...', sender: 'typing' }]);
+  //   try {
+  //     const response = await fetch('http://127.0.0.1:5000/chat', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ message: text, language }),
+  //     });
+  //     const data = await response.json();
+  //     setMessages((prevMessages) =>
+  //       prevMessages.filter((msg) => msg.sender !== 'typing')
+  //     );
+  //     setMessages((prevMessages) => [
+  //       ...prevMessages,
+  //       { text: data.response, sender: 'ai' },
+  //     ]);
+  //   } catch (error) {
+  //     console.error('Error fetching chat response:', error);
+  //   }
+  // };
 
   const chatApi = async (text: string) => {
+    const typingMessage: Message = { text: '', sender: 'typing' };
+    setMessages(prevMessages => [...prevMessages, typingMessage]);
+    
     try {
-      const response = await fetch('http://127.0.0.1:5000/register', {
+      const response = await fetch('http://127.0.0.1:5000/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ input }),
+        body: JSON.stringify({ message: text, language }),
       });
       const data = await response.json();
-      setMessages([...messages, { text: data.text, sender: 'ai' }]);
-      return data;
+      
+      setMessages(prevMessages => {
+        const newMessages = prevMessages.filter(msg => msg !== typingMessage);
+        return [...newMessages, { text: data.response, sender: 'ai' }];
+      });
     } catch (error) {
       console.error('Error fetching chat response:', error);
-      return null;
+      setMessages(prevMessages => prevMessages.filter(msg => msg !== typingMessage));
     }
-  }
-
-  // useEffect(() => {
-  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  // }, [messages]);
+  };
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -85,9 +107,15 @@ const SamplePage: React.FC = () => {
   const handleStartRecording = () => {
     setIsRecording(true);
     resetTranscript();
-    console.log(language)
     SpeechRecognition.startListening({ language });
+  };
 
+  const handleSubmitRecording = () => {
+    setIsRecording(false);
+    resetTranscript();
+    const newMessage: Message = { text: transcript, sender: 'user' };
+    setMessages(prevMessages => [...prevMessages, newMessage]);
+    chatApi(transcript);
   };
 
   const handleStopRecording = async () => {
@@ -119,22 +147,17 @@ const SamplePage: React.FC = () => {
     SpeechRecognition.stopListening();
     setIsRecording(false);
     resetTranscript();
-    console.log('Recording cancelled');
-    console.log(transcript)
-    setTranslatedText(transcript)
-    setMessages([...messages, { text:transcript, sender: 'user' }]);
+    // setTranslatedText(transcript);
+    // setMessages([...messages, { text: transcript, sender: 'user' }]);
   };
 
+  
   const handleSendMessage = () => {
     if (input.trim() !== '') {
-      setMessages([...messages, { text: input, sender: 'user' }]);
+      const newMessage: Message = { text: input, sender: 'user' };
+      setMessages(prevMessages => [...prevMessages, newMessage]);
+      chatApi(input);
       setInput('');
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { text: 'This is a response from the AI.', sender: 'ai' },
-        ]);
-      }, 1000);
     }
   };
 
@@ -162,7 +185,6 @@ const SamplePage: React.FC = () => {
   };
 
   const handleLanguageChange = (event: SelectChangeEvent<string>) => {
-    console.log(event.target.value)
     setLanguage(event.target.value);
   };
 
@@ -283,14 +305,11 @@ const SamplePage: React.FC = () => {
                   onClick={handleStartRecording}
                   disabled={isRecording}
                   style={{ marginBottom: '1rem', width: '200px' }}
-                  
                 >
                   Start Recording
                 </Button>
                 <Button
                   variant="contained"
-                  // color="secondary"
-                  // onClick={handleStopRecording}
                   disabled={!isRecording}
                   startIcon={<MicIcon />}
                   style={{ marginBottom: '1rem', width: '200px' ,backgroundColor:'#ffb700',color:'white'}}
@@ -331,26 +350,24 @@ const SamplePage: React.FC = () => {
                   <Typography variant="body1" style={{ marginTop: '0.5rem' }}>
                     {transcript}
                   </Typography>
-                 <div style={{display:'flex',justifyContent:'center'}}>
-                 <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleCancelRecording}
-                    // onClick={handleStopRecording}
-                    style={{ marginTop: '1rem' }}
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleCancelRecording}
-                    // onClick={handleStopRecording}
-                    style={{ marginTop: '1rem' }}
-                  >
-                    Cancel
-                  </Button>
-                 </div>
+                  <div style={{display:'flex',justifyContent:'center'}}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleSubmitRecording}
+                      style={{ marginTop: '1rem' }}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={handleCancelRecording}
+                      style={{ marginTop: '1rem' }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </Box>
               ) : (
                 <Box display="flex" flexDirection="column" alignItems="center">
