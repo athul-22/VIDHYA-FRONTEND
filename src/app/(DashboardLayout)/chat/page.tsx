@@ -14,7 +14,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import Anjali from '../../../assets/Anjeli1.gif'
+import AnjaliStatic from '../../../assets/AnjaliStatic.png'
 import { set } from "lodash";
+import SaveIcon from '@mui/icons-material/Save';
 
 interface Message {
   text: string;
@@ -25,6 +27,47 @@ const paperStyle = {
   boxShadow: 'none',
   border: 'none',
   outline: 'none',
+};
+
+const TypingAnimation: React.FC = () => {
+  return (
+    <Box display="flex" alignItems="center" justifyContent="center" padding={1}>
+      <div style={{
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: '#1976d2',
+        margin: '0 3px',
+        animation: 'typing 1s infinite ease-in-out',
+        animationDelay: '0s'
+      }}></div>
+      <div style={{
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: '#1976d2',
+        margin: '0 3px',
+        animation: 'typing 1s infinite ease-in-out',
+        animationDelay: '0.2s'
+      }}></div>
+      <div style={{
+        width: 10,
+        height: 10,
+        borderRadius: '50%',
+        backgroundColor: '#1976d2',
+        margin: '0 3px',
+        animation: 'typing 1s infinite ease-in-out',
+        animationDelay: '0.4s'
+      }}></div>
+      <style jsx>{`
+        @keyframes typing {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+          100% { transform: translateY(0px); }
+        }
+      `}</style>
+    </Box>
+  );
 };
 
 const SamplePage: React.FC = () => {
@@ -41,9 +84,13 @@ const SamplePage: React.FC = () => {
   const [originalText, setOriginalText] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
+  const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(null);
+  
   const { transcript, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
   const [isRecording, setIsRecording] = useState(false);
+
+  const [isAnjaliAnimating, setIsAnjaliAnimating] = useState(false);
 
   // CHAT GPT API
   // const chatApi = async (text: string) => {
@@ -87,6 +134,18 @@ const SamplePage: React.FC = () => {
         const newMessages = prevMessages.filter(msg => msg !== typingMessage);
         return [...newMessages, { text: data.response, sender: 'ai' }];
       });
+
+      setIsAnjaliAnimating(true);
+
+      const speech = new SpeechSynthesisUtterance(data.response);
+    speech.lang = language === 'hi-IN' ? 'hi-IN' : 'en-US';
+    window.speechSynthesis.speak(speech);
+
+    speech.onend = () => {
+      setIsAnjaliAnimating(false);
+    };
+
+
     } catch (error) {
       console.error('Error fetching chat response:', error);
       setMessages(prevMessages => prevMessages.filter(msg => msg !== typingMessage));
@@ -231,7 +290,7 @@ const SamplePage: React.FC = () => {
           <Grid item xs={12} md={6}>
             <Box display="flex" flexDirection="column" height="68vh" style={{border:'none',boxShadow: 'none',outline:'none'}}>
               <Box flexGrow={1} overflow="auto" padding={2} component={Paper} style={{ ...paperStyle, display: 'flex', flexDirection: 'column' }}>
-                {messages.map((message, index) => (
+                {/* {messages.map((message, index) => (
                   <Box 
                     key={index} 
                     display="flex" 
@@ -267,7 +326,49 @@ const SamplePage: React.FC = () => {
                       </IconButton>
                     </Box>
                   </Box>
-                ))}
+                ))} */}
+                {messages.map((message, index) => (
+  <Box 
+    key={index} 
+    display="flex" 
+    justifyContent={message.sender === 'ai' ? 'flex-start' : 'flex-end'}
+    mb={2}
+    position="relative"
+    onMouseEnter={() => setHoveredMessageIndex(index)}
+    onMouseLeave={() => setHoveredMessageIndex(null)}
+  >
+    {message.sender === 'typing' ? (
+      <TypingAnimation />
+    ) : (
+      <Box
+        style={{
+          backgroundColor: message.sender === 'ai' ? '#e0e0e0' : '#1976d2',
+          color: message.sender === 'ai' ? 'black' : 'white',
+          borderRadius: '8px',
+          padding: '8px 12px',
+          maxWidth: '75%',
+          position: 'relative',
+        }}
+      >
+        <Typography>{message.text}</Typography>
+        {hoveredMessageIndex === index && (
+          <IconButton
+            size="small"
+            onClick={() => handleSaveMessage(index)}
+            style={{
+              position: 'absolute',
+              top: '-10px',
+              right: '-10px',
+              backgroundColor: message.sender === 'ai' ? '#e0e0e0' : '#1976d2',
+            }}
+          >
+            <SaveIcon fontSize="small" style={{ color: message.sender === 'ai' ? 'black' : 'white' }} />
+          </IconButton>
+        )}
+      </Box>
+    )}
+  </Box>
+))}
                 <div ref={messagesEndRef} />
               </Box>
               <Box display="flex" alignItems="center" padding={2} component={Paper} style={paperStyle}>
@@ -297,7 +398,8 @@ const SamplePage: React.FC = () => {
           <Grid item xs={12} md={6}>
             <Box display="flex" flexDirection="column" alignItems="center" height="60vh" justifyContent="center">
               <Box display="flex" flexDirection="column" alignItems="center" width="100%">
-                <img src={Anjali.src} alt="Anjali" style={{height:'300px',width:'300px',marginBottom:'20px',borderRadius:'50%'}}  />
+                <img src={isAnjaliAnimating ? Anjali.src : AnjaliStatic.src}  alt="Anjali" style={{height:'300px',width:'300px',marginBottom:'20px',borderRadius:'50%'}}
+                  />
                 <Button
                   variant="contained"
                   color="primary"
@@ -383,12 +485,12 @@ const SamplePage: React.FC = () => {
       </DashboardCard>
 
       <Menu
-        anchorEl={anchorEl.target}
-        open={Boolean(anchorEl.target)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={() => handleSaveMessage(anchorEl.index)}>Save</MenuItem>
-      </Menu>
+  anchorEl={anchorEl.target}
+  open={Boolean(anchorEl.target)}
+  onClose={handleMenuClose}
+>
+  <MenuItem onClick={() => handleSaveMessage(anchorEl.index)}>Save</MenuItem>
+</Menu>
 
       <Dialog open={openDialog} onClose={handleDialogClose} fullWidth maxWidth="sm">
         <DialogTitle>Upload File</DialogTitle>
