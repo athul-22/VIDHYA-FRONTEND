@@ -80,11 +80,6 @@ const SamplePage: React.FC = () => {
   const languageOptions = [
     { value: 'en-IN', label: 'English' },
     { value: 'hi-IN', label: 'Hindi' },
-    { value: 'ml-IN', label: 'Malayalam' },
-    { value: 'ta-IN', label: 'Tamil' },
-    { value: 'te-IN', label: 'Telugu' },
-    { value: 'kn-IN', label: 'Kannada' },
-    { value: 'bn-IN', label: 'Bengali' },
   ];
 
   const handleStartRecording = () => {
@@ -212,7 +207,7 @@ const SamplePage: React.FC = () => {
         <Grid container spacing={2}>
           {/* Left side: Chat section */}
           <Grid item xs={12} md={6}>
-            <Box display="flex" flexDirection="column" height="60vh" style={{border:'none',boxShadow: 'none',outline:'none'}}>
+            <Box display="flex" flexDirection="column" height="68vh" style={{border:'none',boxShadow: 'none',outline:'none'}}>
               <Box flexGrow={1} overflow="auto" padding={2} component={Paper} style={{ ...paperStyle, display: 'flex', flexDirection: 'column' }}>
                 {messages.map((message, index) => (
                   <Box 
@@ -288,17 +283,19 @@ const SamplePage: React.FC = () => {
                   onClick={handleStartRecording}
                   disabled={isRecording}
                   style={{ marginBottom: '1rem', width: '200px' }}
+                  
                 >
                   Start Recording
                 </Button>
                 <Button
                   variant="contained"
-                  color="secondary"
-                  onClick={handleStopRecording}
+                  // color="secondary"
+                  // onClick={handleStopRecording}
                   disabled={!isRecording}
-                  style={{ marginBottom: '1rem', width: '200px' }}
+                  startIcon={<MicIcon />}
+                  style={{ marginBottom: '1rem', width: '200px' ,backgroundColor:'#ffb700',color:'white'}}
                 >
-                  Stop Recording
+                  Draw Sketch
                 </Button>
               </Box>
             </Box>
