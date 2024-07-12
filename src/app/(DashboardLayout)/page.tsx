@@ -10,6 +10,8 @@ import Blog from '@/app/(DashboardLayout)/components/dashboard/Blog';
 import ProductSales from '@/app/(DashboardLayout)/components/dashboard/ProductSales';
 
 const Dashboard = () => {
+
+
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
       <Box>

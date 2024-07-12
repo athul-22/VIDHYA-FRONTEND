@@ -1,125 +1,272 @@
+import React, { useState } from 'react';
+import {
+  Box,
+  Typography,
+  Button,
+  Select,
+  MenuItem,
+  Stepper,
+  Step,
+  StepLabel,
+  Card,
+  Grid,
+  Chip,
+  TextField,
+  styled,
+  Stack,
+} from '@mui/material';
 import axios from 'axios';
-import React, { useState } from "react";
-import { Box, Typography, Button, Select, MenuItem } from "@mui/material";
-import CustomTextField from "@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField";
-import { Stack } from "@mui/system";
+import CustomTextField from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField';
 
-interface registerType {
-  title?: string;
-  subtitle?: JSX.Element | JSX.Element[];
-  subtext?: JSX.Element | JSX.Element[];
-}
+const MainWrapper = styled('div')(() => ({
+  display: 'flex',
+  minHeight: '100vh',
+  width: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: '20px',
+}));
 
-const AuthRegister = ({ title, subtitle, subtext }: registerType) => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [language, setLanguage] = useState<number>(1); // Default language set to English
+const FormCard = styled(Card)(() => ({
+  width: '100%',
+  maxWidth: '600px',
+  padding: '20px',
+  margin: '20px',
+}));
 
-  const handleRegister = async () => {
+const steps = ['Account Info', 'User Info'];
+
+const AuthRegister = () => {
+  const [activeStep, setActiveStep] = useState(0);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    language: 1, // Default language set to English
+    school: '',
+    grade: '',
+    performance: '',
+    interests: [] as string[],
+    location: '',
+    ambition: '',
+    hobbies: '',
+  });
+
+  const [newInterest, setNewInterest] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const name = e.target.name as keyof typeof formData;
+    setFormData(prevData => ({ ...prevData, [name]: e.target.value }));
+  };
+
+  const handleAddInterest = () => {
+    if (newInterest && !formData.interests.includes(newInterest)) {
+      setFormData(prevData => ({
+        ...prevData,
+        interests: [...prevData.interests, newInterest],
+      }));
+      setNewInterest('');
+    }
+  };
+
+  const handleRemoveInterest = (interest: string) => {
+    setFormData(prevData => ({
+      ...prevData,
+      interests: prevData.interests.filter((item) => item !== interest),
+    }));
+  };
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/register', {
-        name,
-        email,
-        password,
-        language
-      });
-
+      const response = await axios.post('http://127.0.0.1:5000/register', formData);
       if (response.status === 201) {
-        // Store user ID and details in localStorage
         const userId = response.data.userId;
         localStorage.setItem('userId', userId);
-        localStorage.setItem('userDetails', JSON.stringify({ name, email, language }));
-        
-        // Redirect or update UI as needed
-        window.location.href = '/authentication/user-info';
+        localStorage.setItem('userDetails', JSON.stringify(formData));
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('Error registering user:', error);
-      // Handle error (e.g., show error message)
     }
   };
 
   return (
-    <>
-      {title ? (
-        <Typography fontWeight="700" variant="h2" mb={1}>
-          {title}
+    <MainWrapper>
+      <FormCard elevation={9}>
+        <Typography fontWeight="700" variant="h4" mb={3} textAlign="center">
+          Register
         </Typography>
-      ) : null}
 
-      {subtext}
+        <Stepper activeStep={activeStep} alternativeLabel>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
 
-      <Box>
-        <Stack mb={3}>
-          <Typography
-            variant="subtitle1"
-            fontWeight={600}
-            component="label"
-            htmlFor="name"
-            mb="5px"
-          >
-            Name
-          </Typography>
-          <CustomTextField id="name" variant="outlined" fullWidth value={name} onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setName(e.target.value)} />
+        {activeStep === 0 && (
+          <Box mt={3}>
+            <Stack spacing={3}>
+              <CustomTextField
+                label="Name"
+                name="name"
+                variant="outlined"
+                fullWidth
+                value={formData.name}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                label="Email Address"
+                name="email"
+                variant="outlined"
+                fullWidth
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <CustomTextField
+                label="Password"
+                name="password"
+                variant="outlined"
+                fullWidth
+                type="password"
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <Select
+                label="Language"
+                name="language"
+                value={formData.language}
+                onChange={handleSelectChange}
+                fullWidth
+              >
+                <MenuItem value={1}>English</MenuItem>
+                <MenuItem value={2}>Kannada</MenuItem>
+              </Select>
+            </Stack>
+            <Box display="flex" justifyContent="space-between" mt={3}>
+              <Button disabled>Back</Button>
+              <Button color="primary" variant="contained" onClick={handleNext}>
+                Next
+              </Button>
+            </Box>
+          </Box>
+        )}
 
-          <Typography
-            variant="subtitle1"
-            fontWeight={600}
-            component="label"
-            htmlFor="email"
-            mb="5px"
-            mt="25px"
-          >
-            Email Address
-          </Typography>
-          <CustomTextField id="email" variant="outlined" fullWidth value={email} onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setEmail(e.target.value)} />
-
-          <Typography
-            variant="subtitle1"
-            fontWeight={600}
-            component="label"
-            htmlFor="password"
-            mb="5px"
-            mt="25px"
-          >
-            Password
-          </Typography>
-          <CustomTextField id="password" variant="outlined" fullWidth value={password} onChange={(e: { target: { value: React.SetStateAction<string>; }; }) => setPassword(e.target.value)} />
-
-          <Typography
-            variant="subtitle1"
-            fontWeight={600}
-            component="label"
-            htmlFor="language"
-            mb="5px"
-            mt="25px"
-          >
-            Language
-          </Typography>
-          <Select
-            labelId="language-select-label"
-            id="language-select"
-            value={language}
-            onChange={(e) => setLanguage(Number(e.target.value))}
-            fullWidth
-          >
-            <MenuItem value={1}>English</MenuItem>
-            <MenuItem value={2}>Kannada</MenuItem>
-          </Select>
-        </Stack>
-        <Button
-          color="primary"
-          variant="contained"
-          size="large"
-          fullWidth
-          onClick={handleRegister}
-        >
-          Sign Up
-        </Button>
-      </Box>
-      {subtitle}
-    </>
+        {activeStep === 1 && (
+          <Box mt={3}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <CustomTextField
+                  label="School"
+                  name="school"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.school}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomTextField
+                  label="Location, State"
+                  name="location"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.location}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomTextField
+                  label="Grade"
+                  name="grade"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.grade}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomTextField
+                  label="Your Ambition"
+                  name="ambition"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.ambition}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <CustomTextField
+                  label="Your Hobbies"
+                  name="hobbies"
+                  variant="outlined"
+                  fullWidth
+                  value={formData.hobbies}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Select
+                  label="Learning Capacity"
+                  name="performance"
+                  value={formData.performance}
+                  onChange={handleSelectChange}
+                  fullWidth
+                >
+                  <MenuItem value="below average">Below Average</MenuItem>
+                  <MenuItem value="average">Average</MenuItem>
+                  <MenuItem value="good">Good</MenuItem>
+                  <MenuItem value="topper">Very Good</MenuItem>
+                </Select>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label="Add Interest"
+                  value={newInterest}
+                  onChange={(e) => setNewInterest(e.target.value)}
+                  fullWidth
+                />
+                <Button onClick={handleAddInterest}>Add</Button>
+              </Grid>
+              <Grid item xs={12}>
+                {formData.interests.map((interest) => (
+                  <Chip
+                    key={interest}
+                    label={interest}
+                    onDelete={() => handleRemoveInterest(interest)}
+                    style={{ margin: '2px' }}
+                  />
+                ))}
+              </Grid>
+              <Grid item xs={12}>
+                <Box display="flex" justifyContent="space-between">
+                  <Button onClick={handleBack}>Back</Button>
+                  <Button color="primary" variant="contained" onClick={handleSubmit}>
+                    Sign Up
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        )}
+      </FormCard>
+    </MainWrapper>
   );
 };
 
