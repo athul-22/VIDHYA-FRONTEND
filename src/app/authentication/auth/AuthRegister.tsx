@@ -19,6 +19,7 @@ import axios from 'axios';
 import CustomTextField from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField';
 import { SelectChangeEvent } from '@mui/material/Select';
 
+
 interface AuthRegisterProps {
   subtext?: ReactNode;
   subtitle?: ReactNode;
@@ -119,7 +120,7 @@ const AuthRegister: React.FC<AuthRegisterProps> = ({ subtext, subtitle }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:5000/register', formData);
+      const response = await axios.post('https://vidhya-nodejs.onrender.com/register', formData);
       if (response.status === 201) {
         const userId = response.data.userId;
         localStorage.setItem('userId', userId);

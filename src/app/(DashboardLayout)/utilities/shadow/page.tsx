@@ -1,9 +1,9 @@
 'use client';
-import { Paper, Box, Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Paper, Box, Grid, Typography } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body1,
@@ -16,34 +16,49 @@ const Item = styled(Paper)(({ theme }) => ({
 const darkTheme = createTheme({ palette: { mode: 'dark' } });
 const lightTheme = createTheme({ palette: { mode: 'light' } });
 
+interface SavedMessage {
+  previous: string;
+  current: string;
+}
+
 const Shadow = () => {
+  const [savedMessages, setSavedMessages] = useState<SavedMessage[]>([]);
+
+  useEffect(() => {
+    const messages = JSON.parse(localStorage.getItem('savedMessages') || '[]');
+    setSavedMessages(messages);
+  }, []);
+
   return (
     <PageContainer title="Shadow" description="this is Shadow">
-
-      <DashboardCard title="Shadow">
-        <Grid container spacing={2}>
-          {[lightTheme, darkTheme].map((theme, index) => (
-            <Grid item xs={6} key={index}>
-              <ThemeProvider theme={theme}>
-                <Box
-                  sx={{
-                    p: 2,
-                    bgcolor: 'background.default',
-                    display: 'grid',
-                    gridTemplateColumns: { md: '1fr 1fr' },
-                    gap: 2,
-                  }}
-                >
-                  {[0, 1, 2, 3, 4, 6, 8, 12, 16, 24].map((elevation) => (
-                    <Item key={elevation} elevation={elevation}>
-                      {`elevation=${elevation}`}
-                    </Item>
-                  ))}
-                </Box>
-              </ThemeProvider>
-            </Grid>
-          ))}
-        </Grid>
+      <DashboardCard title="Saved messages">
+        <div> 
+          <Grid container spacing={2}>
+            {savedMessages.map((message, index) => (
+              <Grid item xs={12} key={index}>
+                <Paper elevation={3} style={{ padding: '16px', marginBottom: '16px' }}>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Previous message:
+                  </Typography>
+                  <Typography variant="body1" paragraph>
+                    {message.previous}
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    Saved message:
+                  </Typography>
+                  <Typography variant="body1">
+                    {message.current}
+                  </Typography>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
+          {savedMessages.length === 0 && (
+            <Typography variant="body1" align="center">
+              No saved messages found.
+            </Typography>
+          )}
+        </div>
       </DashboardCard>
     </PageContainer>
   );
