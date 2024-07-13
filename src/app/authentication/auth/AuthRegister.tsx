@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,ReactNode} from 'react';
 import {
   Box,
   Typography,
@@ -17,6 +17,12 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import CustomTextField from '@/app/(DashboardLayout)/components/forms/theme-elements/CustomTextField';
+import { SelectChangeEvent } from '@mui/material/Select';
+
+interface AuthRegisterProps {
+  subtext?: ReactNode;
+  subtitle?: ReactNode;
+}
 
 const MainWrapper = styled('div')(() => ({
   display: 'flex',
@@ -34,16 +40,31 @@ const FormCard = styled(Card)(() => ({
   margin: '20px',
 }));
 
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  language: number;
+  school: string;
+  grade: string;
+  performance: string;
+  interests: string[];
+  location: string;
+  ambition: string;
+  hobbies: string;
+}
+
+
 const steps = ['Account Info', 'User Info'];
 
-const AuthRegister = () => {
+const AuthRegister: React.FC<AuthRegisterProps> = ({ subtext, subtitle }) => {
   const [activeStep, setActiveStep] = useState(0);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     password: '',
-    language: 1, // Default language set to English
+    language: 1,
     school: '',
     grade: '',
     performance: '',
@@ -60,9 +81,14 @@ const AuthRegister = () => {
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const handleSelectChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
-    const name = e.target.name as keyof typeof formData;
-    setFormData(prevData => ({ ...prevData, [name]: e.target.value }));
+  // const handleSelectChange = (e: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+  //   const name = e.target.name as keyof typeof formData;
+  //   setFormData(prevData => ({ ...prevData, [name]: e.target.value }));
+  // };
+
+  const handleSelectChange = (event: SelectChangeEvent<number | string>) => {
+    const { name, value } = event.target;
+    setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
   const handleAddInterest = () => {
@@ -106,6 +132,8 @@ const AuthRegister = () => {
   };
 
   return (
+    <>
+    {subtext}
     <MainWrapper>
       <FormCard elevation={9}>
         <Typography fontWeight="700" variant="h4" mb={3} textAlign="center">
@@ -267,6 +295,8 @@ const AuthRegister = () => {
         )}
       </FormCard>
     </MainWrapper>
+    {subtitle}
+    </>
   );
 };
 
