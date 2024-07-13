@@ -1,12 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React,{ useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Grid,
   CardContent,
   Card,
-  CardMedia,
   Button,
   Backdrop,
   CircularProgress,
@@ -33,9 +32,9 @@ const TypographyPage = () => {
     title: string;
     description: string;
     image_link: string;
-    URL: string
+    URL: string;
   }
-  
+
   const [careerRoles, setCareerRoles] = useState<CareerRole[]>([]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,7 +56,11 @@ const TypographyPage = () => {
 
       const data = await response.json();
       if (response.ok) {
-        setCareerRoles(data.career_roles);
+        const formattedRoles = data.career_roles.map((role: CareerRole) => ({
+          ...role,
+          URL: role.URL.match(/\(([^)]+)\)/)?.[1] || role.URL,
+        }));
+        setCareerRoles(formattedRoles);
       } else {
         console.error(data.error);
       }
@@ -101,11 +104,11 @@ const TypographyPage = () => {
                 variant="contained"
                 color="primary"
                 onClick={fetchCareerRoles}
-                style={{ marginTop: "310px" ,marginLeft:'40px'}}
+                style={{ marginTop: "310px", marginLeft: "40px" }}
               >
                 Generate
               </Button>
-              </React.Fragment>
+            </React.Fragment>
           </DashboardCard>
         </Grid>
         {careerRoles.map((role, index) => (
@@ -116,12 +119,6 @@ const TypographyPage = () => {
                 color: "#fff",
               }}
             >
-              {/* <CardMedia
-                component="img"
-                height="140"
-                image={role.image_link}
-                alt={role.title}
-              /> */}
               <CardContent>
                 <Typography
                   variant="h6"
@@ -147,7 +144,6 @@ const TypographyPage = () => {
           </Grid>
         ))}
       </Grid>
-      
       <Backdrop open={loading} style={{ zIndex: 1300, color: "#fff" }}>
         <CircularProgress color="inherit" />
       </Backdrop>
