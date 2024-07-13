@@ -101,7 +101,7 @@ const TypographyPage = () => {
                 variant="contained"
                 color="primary"
                 onClick={fetchCareerRoles}
-                style={{ marginTop: "300px" }}
+                style={{ marginTop: "310px" ,marginLeft:'40px'}}
               >
                 Generate
               </Button>
@@ -116,12 +116,12 @@ const TypographyPage = () => {
                 color: "#fff",
               }}
             >
-              <CardMedia
+              {/* <CardMedia
                 component="img"
                 height="140"
                 image={role.image_link}
                 alt={role.title}
-              />
+              /> */}
               <CardContent>
                 <Typography
                   variant="h6"
