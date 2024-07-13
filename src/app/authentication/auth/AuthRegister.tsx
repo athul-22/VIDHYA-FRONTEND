@@ -32,13 +32,13 @@ const MainWrapper = styled('div')(() => ({
   justifyContent: 'center',
   alignItems: 'center',
   
-  // padding: '20px',
+  // padding: '10px',
 }));
 
 const FormCard = styled(Card)(() => ({
   width: '100%',
   maxWidth: '700px',
-  // padding: '20px',
+  padding: '10px',
   margin: '2px',
 }));
 
