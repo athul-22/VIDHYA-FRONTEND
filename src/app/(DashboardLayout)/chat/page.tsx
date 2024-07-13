@@ -18,8 +18,8 @@ import AnjaliStatic from '../../../assets/AnjaliStatic.png'
 import { set } from "lodash";
 import SaveIcon from '@mui/icons-material/Save';
 // import { CanvasDraw } from "react-canvas-draw";
-import type { CanvasDrawProps } from 'react-canvas-draw';
-import CanvasDraw from "react-canvas-draw";
+// import type { CanvasDrawProps } from 'react-canvas-draw';
+// import CanvasDraw from "react-canvas-draw";
 import GestureIcon from '@mui/icons-material/Gesture';
 // import { CanvasDraw } from 'react-canvas-draw';
 
@@ -105,7 +105,7 @@ const SamplePage: React.FC = () => {
 
   const [isSketchDialogOpen, setIsSketchDialogOpen] = useState(false);
 // const [canvasRef, setCanvasRef] = useState<CanvasDraw | null>(null);
-const canvasRef = useRef<CanvasDraw | null>(null);
+// const canvasRef = useRef<CanvasDraw | null>(null);
 
   const handleOpenSketchDialog = () => {
     setIsSketchDialogOpen(true);
@@ -147,53 +147,7 @@ const canvasRef = useRef<CanvasDraw | null>(null);
   // };
   // const ctx: CanvasRenderingContext2D | null
 
-  const handleSubmitSketch = async () => {
-    if (canvasRef && canvasRef.current) {
-      // Create a new canvas with white background
-      const originalCanvas = canvasRef.current.getCanvas();
-      const newCanvas = document.createElement('canvas');
-      newCanvas.width = originalCanvas.width;
-      newCanvas.height = originalCanvas.height;
-      const ctx = newCanvas.getContext('2d');
   
-      // // Fill with white background
-      // if (ctx) {
-      //   ctx.fillStyle = 'white';
-      // }
-      // ctx.fillRect(0, 0, newCanvas.width, newCanvas.height);
-  
-      // // Draw the original sketch on top
-      // ctx.drawImage(originalCanvas, 0, 0);
-  
-      // Get the data URL of the new canvas
-      const imageDataUrl = newCanvas.toDataURL();
-  
-      try {
-        const response = await fetch('https://vidhya-nodejs.onrender.com/analyze-image', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ imageData: imageDataUrl }),
-        });
-        const data = await response.json();
-        console.log('Image analysis:', data.analysis);
-        // Add the AI response to the chat
-        setMessages(prevMessages => [
-          ...prevMessages,
-          { text: "Here's what I see in your sketch:", sender: 'ai' },
-          { text: data.analysis, sender: 'ai' }
-        ]);
-      } catch (error) {
-        console.error('Error analyzing image:', error);
-        setMessages(prevMessages => [
-          ...prevMessages,
-          { text: "I'm sorry, I couldn't analyze the image. Please try again.", sender: 'ai' }
-        ]);
-      }
-    }
-    handleCloseSketchDialog();
-  };
 
   // CHAT GPT API
   // const chatApi = async (text: string) => {
@@ -644,22 +598,22 @@ const canvasRef = useRef<CanvasDraw | null>(null);
       <Dialog open={isSketchDialogOpen} onClose={handleCloseSketchDialog} maxWidth="md" fullWidth>
   <DialogTitle>Draw Your Sketch</DialogTitle>
   <DialogContent>
-  <CanvasDraw
+  {/* <CanvasDraw
   ref={canvasRef}
   brushColor="#000000"
   brushRadius={2}
   lazyRadius={0}
   canvasWidth={550}
   canvasHeight={400}
-/>
+/> */}
   </DialogContent>
   <DialogActions>
     <Button onClick={handleCloseSketchDialog} color="primary">
       Cancel
     </Button>
-    <Button onClick={handleSubmitSketch} color="primary">
+    {/* <Button onClick={handleSubmitSketch} color="primary">
       Submit
-    </Button>
+    </Button> */}
   </DialogActions>
 </Dialog>
     </PageContainer>
