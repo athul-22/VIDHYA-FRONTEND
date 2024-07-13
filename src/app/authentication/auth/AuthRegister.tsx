@@ -31,14 +31,15 @@ const MainWrapper = styled('div')(() => ({
   width: '100%',
   justifyContent: 'center',
   alignItems: 'center',
-  padding: '20px',
+  
+  // padding: '20px',
 }));
 
 const FormCard = styled(Card)(() => ({
   width: '100%',
-  maxWidth: '600px',
-  padding: '20px',
-  margin: '20px',
+  maxWidth: '700px',
+  // padding: '20px',
+  margin: '2px',
 }));
 
 interface FormData {
@@ -151,7 +152,7 @@ const AuthRegister: React.FC<AuthRegisterProps> = ({ subtext, subtitle }) => {
 
         {activeStep === 0 && (
           <Box mt={3}>
-            <Stack spacing={3}>
+            <Stack spacing={2}>
               <CustomTextField
                 label="Name"
                 name="name"

@@ -33,10 +33,10 @@ const Dashboard = () => {
             <UpcomingSchedules />
           </Grid>
           <Grid item xs={12} lg={8}>
-            <TopPayingClients />
+            {/* <TopPayingClients /> */}
           </Grid>
           <Grid item xs={12}>
-            <Blog />
+            {/* <Blog /> */}
           </Grid>
         </Grid>
       </Box>
