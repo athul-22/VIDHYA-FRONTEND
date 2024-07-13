@@ -78,7 +78,7 @@ import {
       }
   
       try {
-        const response = await axios.post('http://127.0.0.1:5000/update_user', {
+        const response = await axios.post('https://vidhya-nodejs.onrender.com/update_user', {
           email: userId,
           education: formData.school,
           location: formData.location,

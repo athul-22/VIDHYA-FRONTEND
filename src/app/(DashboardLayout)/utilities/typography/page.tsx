@@ -43,7 +43,7 @@ const TypographyPage = () => {
   const fetchCareerRoles = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:3001/roadmap-generator", {
+      const response = await fetch("https://vidhya-nodejs.onrender.com/roadmap-generator", {
         method: "POST",
         mode: "cors",
         headers: {

@@ -119,7 +119,7 @@ const canvasRef = useRef<CanvasDraw | null>(null);
   //   if (canvasRef) {
   //     const imageDataUrl = canvasRef.current?.getDataURL();
   //     try {
-  //       const response = await fetch('http://localhost:3001/analyze-image', {
+  //       const response = await fetch('https://vidhya-nodejs.onrender.com/analyze-image', {
   //         method: 'POST',
   //         headers: {
   //           'Content-Type': 'application/json',
@@ -169,7 +169,7 @@ const canvasRef = useRef<CanvasDraw | null>(null);
       const imageDataUrl = newCanvas.toDataURL();
   
       try {
-        const response = await fetch('http://localhost:3001/analyze-image', {
+        const response = await fetch('https://vidhya-nodejs.onrender.com/analyze-image', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -199,7 +199,7 @@ const canvasRef = useRef<CanvasDraw | null>(null);
   // const chatApi = async (text: string) => {
   //   setMessages([...messages, { text: 'Typing...', sender: 'typing' }]);
   //   try {
-  //     const response = await fetch('http://127.0.0.1:5000/chat', {
+  //     const response = await fetch('https://vidhya-nodejs.onrender.com/chat', {
   //       method: 'POST',
   //       headers: {
   //         'Content-Type': 'application/json',
@@ -224,7 +224,7 @@ const canvasRef = useRef<CanvasDraw | null>(null);
     setMessages(prevMessages => [...prevMessages, typingMessage]);
     
     try {
-      const response = await fetch('http://localhost:3001/chat', {
+      const response = await fetch('https://vidhya-nodejs.onrender.com/chat', {
         method: 'POST',
         mode: 'cors',
         headers: {
