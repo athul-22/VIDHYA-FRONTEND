@@ -11,7 +11,8 @@ import {
   IconMessageChatbot,
   IconNavigation,
   IconBookmark,
-  IconFlare
+  IconFlare,
+  IconSparkles
 } from "@tabler/icons-react";
 
 import { uniqueId } from "lodash";
@@ -23,8 +24,8 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Learn",
-    icon: IconMessageChatbot,
+    title: "Anjali",
+    icon: IconSparkles,
     href: "/chat",
   },
 
@@ -43,12 +44,6 @@ const Menuitems = [
     id: uniqueId(),
     title: "Guider",
     icon: IconNavigation,
-    href: "/utilities/typography",
-  },
-  {
-    id: uniqueId(),
-    title: "Live Test",
-    icon: IconFlare,
     href: "/utilities/typography",
   },
   {
