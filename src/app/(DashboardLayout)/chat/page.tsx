@@ -121,8 +121,9 @@ const SamplePage: React.FC = () => {
     setMessages(prevMessages => [...prevMessages, typingMessage]);
     
     try {
-      const response = await fetch('http://127.0.0.1:5000/chat', {
+      const response = await fetch('http://localhost:3001/chat', {
         method: 'POST',
+        mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -257,9 +258,9 @@ const SamplePage: React.FC = () => {
 
   return (
     <PageContainer title="AI Teacher" description="this is Sample page">
-      <DashboardCard title={
-        <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
-          <Typography variant="h6">AI Teacher</Typography>
+      <DashboardCard title="Anjali">
+      <React.Fragment>
+      <Box display="flex" flexDirection="column" alignItems="flex-start" width="100%">
           <Box display="flex" alignItems="center" mt={1}>
             <FormControl variant="outlined" size="small" style={{ marginRight: '1rem', minWidth: 120 }}>
               <InputLabel>Language</InputLabel>
@@ -275,16 +276,15 @@ const SamplePage: React.FC = () => {
                 ))}
               </Select>
             </FormControl>
-            <Button
+            {/* <Button
               variant="contained"
               style={{ backgroundColor: '#1976d2', color: 'white' }}
               onClick={handleGeneratePDF}
             >
               Generate PDF
-            </Button>
+            </Button> */}
           </Box>
         </Box>
-      }>
         <Grid container spacing={2}>
           {/* Left side: Chat section */}
           <Grid item xs={12} md={6}>
@@ -482,6 +482,7 @@ const SamplePage: React.FC = () => {
             </Backdrop>
           </Grid>
         </Grid>
+        </React.Fragment>
       </DashboardCard>
 
       <Menu

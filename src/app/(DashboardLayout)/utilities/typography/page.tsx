@@ -1,266 +1,156 @@
-'use client';
-import { Typography, Grid, CardContent } from '@mui/material';
-import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
-import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
+/* eslint-disable @next/next/no-img-element */
+"use client";
+import React,{ useEffect, useState } from "react";
+import {
+  Typography,
+  Grid,
+  CardContent,
+  Card,
+  CardMedia,
+  Button,
+  Backdrop,
+  CircularProgress,
+  TextField,
+} from "@mui/material";
+import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
+import DashboardCard from "@/app/(DashboardLayout)/components/shared/DashboardCard";
+import CAREER from "../../../../assets/CAREER.png";
 
+const randomBackgrounds = [
+  "linear-gradient(135deg, #f6d365 0%, #fda085 100%)", // Orange gradient
+  "linear-gradient(135deg, #a8e063 0%, #56ab2f 100%)", // Green gradient
+  "linear-gradient(90deg, #69caff 0%, #00bbff 100%)", // Blue sky-blue gradient
+  "linear-gradient(135deg, #c3cfe2 0%, #c3cfe2 100%)", // Keeping the grey gradient
+];
+
+interface Props {
+  title: string;
+  children: React.ReactNode;
+}
 
 const TypographyPage = () => {
+  interface CareerRole {
+    title: string;
+    description: string;
+    image_link: string;
+    URL: string
+  }
+  
+  const [careerRoles, setCareerRoles] = useState<CareerRole[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const fetchCareerRoles = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3001/roadmap-generator", {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "a@a.a",
+          input_text: inputText,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setCareerRoles(data.career_roles);
+      } else {
+        console.error(data.error);
+      }
+    } catch (error) {
+      console.error("Error fetching career roles:", error);
+    }
+    setLoading(false);
+  };
+
   return (
     <PageContainer title="Typography" description="this is Typography">
-
       <Grid container spacing={3}>
         <Grid item sm={12}>
-          <DashboardCard title="Default Text">
-            <Grid container spacing={3}>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h1">h1. Heading</Typography>
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 30 | line-height: 45 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h2">h2. Heading</Typography>
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 24 | line-height: 36 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h3">h3. Heading</Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 21 | line-height: 31.5 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h4">h4. Heading</Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 18 | line-height: 27 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5">h5. Heading</Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 16 | line-height: 24 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h6">h6. Heading</Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 14 | line-height: 21 | font weight: 500
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="subtitle1">
-                      subtitle1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 16 | line-height: 28 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="subtitle2">
-                      subtitle2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 14 | line-height: 21 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="body1">
-                      body1. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 16 | line-height: 24 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="body2">
-                      body2. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 14 | line-height: 20 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="caption">
-                      caption. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 12 | line-height: 19 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="overline">
-                      overline. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis
-                      tenetur
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      font size: 12 | line-height: 31 | font weight: 400
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-            </Grid>
-
+          <DashboardCard title="Career Roadmap">
+            <React.Fragment>
+              <img
+                src={CAREER.src}
+                alt="Career"
+                style={{
+                  height: "400px",
+                  width: "400px",
+                  float: "right",
+                  marginRight: "100px",
+                  marginBottom: "100px",
+                }}
+              />
+              <p>Find your best career path with GenAI Intelligence</p>
+              <TextField
+                label="What do you want to become?"
+                variant="outlined"
+                fullWidth
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+                style={{
+                  marginBottom: "16px",
+                  width: "300px",
+                  marginTop: "300px",
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={fetchCareerRoles}
+                style={{ marginTop: "300px" }}
+              >
+                Generate
+              </Button>
+              </React.Fragment>
           </DashboardCard>
         </Grid>
-        <Grid item sm={12}>
-          <DashboardCard title="Default Text">
-            <Grid container spacing={3}>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" color="textprimary">
-                      Text Primary
-                    </Typography>
-
-                    <Typography variant="body1" color="textprimary">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" color="textSecondary">
-                      Text Secondary
-                    </Typography>
-
-                    <Typography variant="body1" color="textSecondary">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.info.main }}>
-                      Text Info
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.info.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.primary.main }}>
-                      Text Primary
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.primary.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.warning.main }}>
-                      Text Warning
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.warning.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.error.main }}>
-                      Text Error
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.error.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-              <Grid item sm={12}>
-                <BlankCard>
-                  <CardContent>
-                    <Typography variant="h5" sx={{ color: (theme) => theme.palette.success.main }}>
-                      Text Success
-                    </Typography>
-
-                    <Typography variant="body1" sx={{ color: (theme) => theme.palette.success.main }}>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quos blanditiis tenetur
-                    </Typography>
-                  </CardContent>
-                </BlankCard>
-              </Grid>
-            </Grid>
-          </DashboardCard>
-        </Grid>
-      </Grid >
+        {careerRoles.map((role, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <Card
+              style={{
+                background: randomBackgrounds[index % randomBackgrounds.length],
+                color: "#fff",
+              }}
+            >
+              <CardMedia
+                component="img"
+                height="140"
+                image={role.image_link}
+                alt={role.title}
+              />
+              <CardContent>
+                <Typography
+                  variant="h6"
+                  component="div"
+                  style={{ fontWeight: "bold" }}
+                >
+                  {role.title}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  {role.description}
+                </Typography>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  href={role.URL}
+                  target="_blank"
+                  style={{ marginTop: "10px" }}
+                >
+                  Explore
+                </Button>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      
+      <Backdrop open={loading} style={{ zIndex: 1300, color: "#fff" }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </PageContainer>
   );
 };
