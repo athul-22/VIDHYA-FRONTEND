@@ -13,7 +13,7 @@ import { Link, Typography } from "@mui/material";
 
 const UpcomingSchedules = () => {
   return (
-    <DashboardCard title="Upcoming Schedules">
+    <DashboardCard title="Upcoming Educational Events in Punjab">
       <>
         <Timeline
           className="theme-timeline"
@@ -34,67 +34,60 @@ const UpcomingSchedules = () => {
           }}
         >
           <TimelineItem>
-            <TimelineOppositeContent>10-7-2024</TimelineOppositeContent>
+            <TimelineOppositeContent>10-9-2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="primary" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              Google Summer Intership opened
+              Punjabi Language Workshop
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>10-7-2024</TimelineOppositeContent>
+            <TimelineOppositeContent>15-9-2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="secondary" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <Typography fontWeight="600">Scholarship exam</Typography>{" "}
+              <Typography fontWeight="600">Punjabi Cultural Heritage Festival</Typography>{" "}
               <Link href="/" underline="none">
-                #NEW
+                #NewEvent
               </Link>
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>13-7-2024</TimelineOppositeContent>
+            <TimelineOppositeContent>20-9-2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="success" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              Amazon Internship SDE
+              Punjabi Literature Seminar
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>18-7-2024</TimelineOppositeContent>
+            <TimelineOppositeContent>25-9-2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="warning" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <Typography fontWeight="600">NCC Exam</Typography>{" "}
+              <Typography fontWeight="600">Traditional Punjabi Music Class</Typography>{" "}
               <Link href="/" underline="none">
-                #NCC
+                #Music
               </Link>
             </TimelineContent>
           </TimelineItem>
           <TimelineItem>
-            <TimelineOppositeContent>19-7-2024</TimelineOppositeContent>
+            <TimelineOppositeContent>30-9-2024</TimelineOppositeContent>
             <TimelineSeparator>
               <TimelineDot color="error" variant="outlined" />
               <TimelineConnector />
             </TimelineSeparator>
             <TimelineContent>
-              <Typography fontWeight="600">WIH Hackathons</Typography>
+              <Typography fontWeight="600">Punjabi Cooking Class</Typography>
             </TimelineContent>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineOppositeContent>19-7-2024</TimelineOppositeContent>
-            <TimelineSeparator>
-              <TimelineDot color="success" variant="outlined" />
-            </TimelineSeparator>
-            <TimelineContent>AI ML Workshop</TimelineContent>
           </TimelineItem>
         </Timeline>
       </>

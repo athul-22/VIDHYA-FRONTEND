@@ -35,16 +35,15 @@ const Menuitems = [
     icon: IconLayoutDashboard,
     href: "/",
   },
-
-  {
-    navlabel: true,
-    subheader: "TOOLS",
-  },
   {
     id: uniqueId(),
     title: "Guider",
     icon: IconNavigation,
     href: "/utilities/typography",
+  },
+  {
+    navlabel: true,
+    subheader: "TOOLS",
   },
   {
     id: uniqueId(),
