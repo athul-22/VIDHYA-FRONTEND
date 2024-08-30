@@ -20,7 +20,6 @@ import UpcomingSchedules from "@/app/(DashboardLayout)/components/dashboard/Upco
 import ProductSales from "@/app/(DashboardLayout)/components/dashboard/ProductSales";
 import PubjabiMap from "@/assets/PUBJAB.gif";
 
-
 interface Job {
   company: string;
   company_logo: string;
@@ -29,7 +28,6 @@ interface Job {
   description: string;
   apply_link: string;
 }
-
 
 const initialJobOpenings: Job[] = [
   {
@@ -70,10 +68,7 @@ const initialJobOpenings: Job[] = [
   },
 ];
 
-
 const Dashboard = () => {
- 
-
   const [jobOpenings, setJobOpenings] = useState(initialJobOpenings);
   const [searchtext, setSearchText] = useState("");
   const handleSearch = async () => {
@@ -107,8 +102,9 @@ const Dashboard = () => {
         })
       );
 
-
       setJobOpenings(formattedData);
+      console.log(formattedData);
+      console.log(jobOpenings);
     } catch (err) {
       console.log(err);
     }
@@ -231,7 +227,8 @@ const Dashboard = () => {
                         alt={`${job.company} logo`}
                       />
                       <Box ml={2}>
-                        <Typography variant="h6">{job.title}</Typography>
+                      <Typography variant="h5">{job.company}</Typography>
+                      <Typography variant="h6" style={{color:'grey'}}>{job.title}</Typography>
                         <Typography variant="body2" color="textSecondary">
                           {job.date}
                         </Typography>
