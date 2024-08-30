@@ -198,6 +198,9 @@ const CareerRoadmapGenerator = () => {
   const [inputText, setInputText] = useState("");
   const [showRoadmap, setShowRoadmap] = useState(false);
   const [interest, setInterest] = useState("");
+  const [showSkeleton, setShowSkeleton] = useState(false);
+
+  
 
   useEffect(() => {
     const storedRoadmap = localStorage.getItem("roadmap");
@@ -215,6 +218,19 @@ const CareerRoadmapGenerator = () => {
     setInputText("");
   };
 
+  // const handleGenerateClick = () => {
+  //   const newRoadmap = initialModules.map((module) => ({
+  //     ...module,
+  //     courses: module.courses.map((course) => ({
+  //       ...course,
+  //       completed: false,
+  //     })),
+  //   }));
+  //   setRoadmap(newRoadmap);
+  //   setShowRoadmap(true);
+  //   localStorage.setItem("roadmap", JSON.stringify(newRoadmap));
+  // };
+
   const handleGenerateClick = () => {
     const newRoadmap = initialModules.map((module) => ({
       ...module,
@@ -226,6 +242,11 @@ const CareerRoadmapGenerator = () => {
     setRoadmap(newRoadmap);
     setShowRoadmap(true);
     localStorage.setItem("roadmap", JSON.stringify(newRoadmap));
+  
+    setShowSkeleton(true);
+    setTimeout(() => {
+      setShowSkeleton(false);
+    }, 5000);
   };
 
   const handleModuleClick = (module) => {
