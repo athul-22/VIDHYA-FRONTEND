@@ -20,10 +20,22 @@ import UpcomingSchedules from "@/app/(DashboardLayout)/components/dashboard/Upco
 import ProductSales from "@/app/(DashboardLayout)/components/dashboard/ProductSales";
 import PubjabiMap from "@/assets/PUBJAB.gif";
 
-const initialJobOpenings = [
+
+interface Job {
+  company: string;
+  company_logo: string;
+  title: string;
+  date: string;
+  description: string;
+  apply_link: string;
+}
+
+
+const initialJobOpenings: Job[] = [
   {
     company: "Google",
-    company_logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/480px-Google_%22G%22_logo.svg.png",
+    company_logo:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/480px-Google_%22G%22_logo.svg.png",
     title: "Software Engineer",
     date: "2024-07-15",
     description: "Develop and maintain software applications.",
@@ -31,7 +43,8 @@ const initialJobOpenings = [
   },
   {
     company: "Meta",
-    company_logo: "https://cdn.pixabay.com/photo/2021/12/14/22/29/meta-6871457_1280.png",
+    company_logo:
+      "https://cdn.pixabay.com/photo/2021/12/14/22/29/meta-6871457_1280.png",
     title: "Data Scientist",
     date: "2024-08-01",
     description: "Analyze and interpret complex data sets.",
@@ -39,7 +52,8 @@ const initialJobOpenings = [
   },
   {
     company: "Amazon",
-    company_logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/2500px-Amazon_icon.svg.png",
+    company_logo:
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Amazon_icon.svg/2500px-Amazon_icon.svg.png",
     title: "Product Manager",
     date: "2024-07-20",
     description: "Oversee product development and strategy.",
@@ -47,7 +61,8 @@ const initialJobOpenings = [
   },
   {
     company: "Intuit",
-    company_logo: "https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/301429490_451337717008996_4409771414638724669_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=wWJJbAd934YQ7kNvgGFv2M4&_nc_ht=scontent-lga3-1.xx&oh=00_AYBt4Fk-hi8ti-W2ZkdF9ChD6kQ1Vta5CwM4NVEdQgy-lg&oe=66981F80",
+    company_logo:
+      "https://scontent-lga3-1.xx.fbcdn.net/v/t39.30808-6/301429490_451337717008996_4409771414638724669_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=wWJJbAd934YQ7kNvgGFv2M4&_nc_ht=scontent-lga3-1.xx&oh=00_AYBt4Fk-hi8ti-W2ZkdF9ChD6kQ1Vta5CwM4NVEdQgy-lg&oe=66981F80",
     title: "UX Designer",
     date: "2024-07-25",
     description: "Design user-friendly interfaces and experiences.",
@@ -55,9 +70,12 @@ const initialJobOpenings = [
   },
 ];
 
+
 const Dashboard = () => {
+ 
+
   const [jobOpenings, setJobOpenings] = useState(initialJobOpenings);
-  const [searchtext , setSearchText] = useState("");  
+  const [searchtext, setSearchText] = useState("");
   const handleSearch = async () => {
     console.log("SEARCH CLICKED");
 
@@ -66,17 +84,29 @@ const Dashboard = () => {
         `https://jobs-api-vercel.vercel.app/jobs?keywords=${searchtext}`
       );
       const data = await response.json();
-      
+
       // Assuming the API response is an object with job openings
       // If the response format is different, adjust this accordingly
-      const formattedData = Object.entries(data).map(([key, job]) => ({
-        company: job.company,
-        company_logo: job.company_logo,
-        title: key,
-        date: job.date,
-        description: job.description,
-        apply_link: job.apply_link,
-      }));
+      // const formattedData = Object.entries(data).map(([key, job]) => ({
+      //   company: job.company,
+      //   company_logo: job.company_logo,
+      //   title: key,
+      //   date: job.date,
+      //   description: job.description,
+      //   apply_link: job.apply_link,
+      // }));
+
+      const formattedData: Job[] = Object.entries(data).map(
+        ([key, value]: [string, any]) => ({
+          company: value.company,
+          company_logo: value.company_logo,
+          title: key,
+          date: value.date,
+          description: value.description,
+          apply_link: value.apply_link,
+        })
+      );
+
 
       setJobOpenings(formattedData);
     } catch (err) {
@@ -107,7 +137,9 @@ const Dashboard = () => {
               <Grid container spacing={2}>
                 <Grid item xs={6}>
                   <Card style={{ padding: "30px", width: "100%" }}>
-                    <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <Typography
+                      style={{ fontSize: "20px", fontWeight: "bold" }}
+                    >
                       Punjabi Gov Live Events
                     </Typography>
                     <img
@@ -120,7 +152,9 @@ const Dashboard = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Card style={{ padding: "30px", width: "100%" }}>
-                    <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+                    <Typography
+                      style={{ fontSize: "20px", fontWeight: "bold" }}
+                    >
                       Live
                     </Typography>
                     <List>
@@ -143,7 +177,9 @@ const Dashboard = () => {
                         />
                       </ListItem>
                       <br />
-                      <Typography style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      <Typography
+                        style={{ fontSize: "20px", fontWeight: "bold" }}
+                      >
                         Upcoming Events
                       </Typography>
                       <br />
@@ -166,11 +202,11 @@ const Dashboard = () => {
           <Grid item xs={12} lg={6}>
             <Card style={{ width: "100%", marginBottom: "20px" }}>
               <TextField
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  handleSearch();
-                }
-              }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    handleSearch();
+                  }
+                }}
                 value={searchtext}
                 onChange={(e) => setSearchText(e.target.value)}
                 // onClick={handleSearch}
@@ -179,8 +215,8 @@ const Dashboard = () => {
                   backgroundColor: "white",
                   width: "100%",
                   padding: "10px",
-                  border: 'none',
-                  outline: 'none'
+                  border: "none",
+                  outline: "none",
                 }}
               />
             </Card>
@@ -190,7 +226,10 @@ const Dashboard = () => {
                 <Card>
                   <CardContent>
                     <Box display="flex" alignItems="center" mb={2}>
-                      <Avatar src={job.company_logo} alt={`${job.company} logo`} />
+                      <Avatar
+                        src={job.company_logo}
+                        alt={`${job.company} logo`}
+                      />
                       <Box ml={2}>
                         <Typography variant="h6">{job.title}</Typography>
                         <Typography variant="body2" color="textSecondary">
