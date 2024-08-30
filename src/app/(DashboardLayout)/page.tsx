@@ -136,7 +136,7 @@ const Dashboard = () => {
                     <Typography
                       style={{ fontSize: "20px", fontWeight: "bold" }}
                     >
-                      Punjabi Gov Live Events
+                      PSDM Live Events
                     </Typography>
                     <img
                       src={PubjabiMap.src}
