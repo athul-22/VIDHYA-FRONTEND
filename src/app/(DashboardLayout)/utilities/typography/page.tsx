@@ -17,6 +17,21 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 
+
+interface Course {
+  name: string;
+  link: string;
+  completed?: boolean;
+}
+
+interface Module {
+  title: string;
+  duration: string;
+  difficulty: string;
+  courses: Course[];
+}
+
+
 const initialModules = [
   {
     title: "Foundations in Mathematics and Programming",
@@ -193,8 +208,8 @@ const ConnectingLine = styled(Box)(({ theme }) => ({
 
 const CareerRoadmapGenerator = () => {
   const [open, setOpen] = useState(false);
-  const [selectedModule, setSelectedModule] = useState(null);
-  const [roadmap, setRoadmap] = useState([]);
+  const [selectedModule, setSelectedModule] = useState<Module | null>(null);
+  const [roadmap, setRoadmap] = useState<Module[]>([]);
   const [inputText, setInputText] = useState("");
   const [showRoadmap, setShowRoadmap] = useState(false);
   const [interest, setInterest] = useState("");
@@ -231,8 +246,26 @@ const CareerRoadmapGenerator = () => {
   //   localStorage.setItem("roadmap", JSON.stringify(newRoadmap));
   // };
 
+  // const handleGenerateClick = () => {
+  //   const newRoadmap = initialModules.map((module) => ({
+  //     ...module,
+  //     courses: module.courses.map((course) => ({
+  //       ...course,
+  //       completed: false,
+  //     })),
+  //   }));
+  //   setRoadmap(newRoadmap);
+  //   setShowRoadmap(true);
+  //   localStorage.setItem("roadmap", JSON.stringify(newRoadmap));
+  
+  //   setShowSkeleton(true);
+  //   setTimeout(() => {
+  //     setShowSkeleton(false);
+  //   }, 5000);
+  // };
+
   const handleGenerateClick = () => {
-    const newRoadmap = initialModules.map((module) => ({
+    const newRoadmap: Module[] = initialModules.map((module) => ({
       ...module,
       courses: module.courses.map((course) => ({
         ...course,
@@ -249,12 +282,13 @@ const CareerRoadmapGenerator = () => {
     }, 5000);
   };
 
-  const handleModuleClick = (module) => {
+  const handleModuleClick = (module: Module) => {
     setSelectedModule(module);
     setOpen(true);
   };
 
-  const handleCourseChange = (moduleIndex, courseIndex) => {
+
+  const handleCourseChange = (moduleIndex: number, courseIndex: number) => {
     const updatedRoadmap = [...roadmap];
     updatedRoadmap[moduleIndex].courses[courseIndex].completed =
       !updatedRoadmap[moduleIndex].courses[courseIndex].completed;
@@ -263,17 +297,17 @@ const CareerRoadmapGenerator = () => {
   };
 
   const calculateProgress = () => {
-    const totalCourses = roadmap.reduce(
-      (sum, module) => sum + module.courses.length,
-      0
-    );
-    const completedCourses = roadmap.reduce(
-      (sum, module) =>
-        sum + module.courses.filter((course) => course.completed).length,
-      0
-    );
-    return totalCourses > 0 ? (completedCourses / totalCourses) * 100 : 0;
-  };
+  const totalCourses = roadmap.reduce(
+    (sum, module) => sum + module.courses.length,
+    0
+  );
+  const completedCourses = roadmap.reduce(
+    (sum, module) =>
+      sum + module.courses.filter((course: Course) => course.completed).length,
+    0
+  );
+  return totalCourses > 0 ? (completedCourses / totalCourses) * 100 : 0;
+};
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -331,7 +365,7 @@ const CareerRoadmapGenerator = () => {
             </Typography>
           </Box>
           <Box sx={{ position: "relative", width: "100%" }}>
-            {roadmap.map((module, index) => (
+          {roadmap.map((module: Module, index: number) => (
               <TimelineCard
                 key={index}
                 onClick={() => handleModuleClick(module)}
@@ -373,59 +407,60 @@ const CareerRoadmapGenerator = () => {
         </Box>
       )}
 
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={() => setOpen(false)}
-        PaperProps={{
-          sx: { width: "30%" },
-        }}
-      >
-        <Box sx={{ padding: 3 }}>
-          {selectedModule && (
-            <>
-              <Typography variant="h4" sx={{ marginBottom: 2 }}>
-                {selectedModule.title}
-              </Typography>
-              <List>
-                {selectedModule.courses.map((course, courseIndex) => (
-                  <ListItem key={courseIndex}>
-                    <Checkbox
-                      checked={course.completed || false}
-                      onChange={() =>
-                        handleCourseChange(
-                          roadmap.findIndex(
-                            (m) => m.title === selectedModule.title
-                          ),
-                          courseIndex
-                        )
-                      }
-                      color="primary"
-                    />
-                    <ListItemText>
-                      <Typography variant="body1">{course.name}</Typography>
-                      <a
-                        href={course.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {course.link}
-                      </a>
-                    </ListItemText>
-                  </ListItem>
-                ))}
-              </List>
-            </>
-          )}
-          <Button
-            variant="contained"
-            onClick={() => setOpen(false)}
-            sx={{ marginTop: 2 }}
-          >
-            Close
-          </Button>
-        </Box>
-      </Drawer>
+<Drawer
+  anchor="right"
+  open={open}
+  onClose={() => setOpen(false)}
+  PaperProps={{
+    sx: { width: "30%" },
+  }}
+>
+  <Box sx={{ padding: 3 }}>
+    {selectedModule && (
+      <>
+        <Typography variant="h4" sx={{ marginBottom: 2 }}>
+          {selectedModule.title}
+        </Typography>
+        <List>
+          {selectedModule.courses.map((course: Course, courseIndex: number) => (
+            <ListItem key={courseIndex}>
+              <Checkbox
+                checked={course.completed || false}
+                onChange={() =>
+                  handleCourseChange(
+                    roadmap.findIndex(
+                      (m) => m.title === selectedModule.title
+                    ),
+                    courseIndex
+                  )
+                }
+                color="primary"
+              />
+              <ListItemText>
+                <Typography variant="body1">{course.name}</Typography>
+                  <a
+                  href={course.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {course.link}
+                </a>
+              </ListItemText>
+            </ListItem>
+          ))}
+        </List>
+      </>
+    )}
+    <Button
+      variant="contained"
+      onClick={() => setOpen(false)}
+      sx={{ marginTop: 2 }}
+    >
+      Close
+    </Button>
+  </Box>
+</Drawer>
+
     </Box>
   );
 };
